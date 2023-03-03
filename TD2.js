@@ -1,9 +1,14 @@
+const prompt = require("prompt-sync")();    //inclusion  de prompt
 const fs = require("fs"); 
-let user = fs.readFileSync("users.json"); //importer le fichier "users.json"
-const tab = JSON.parse(user);  //recupérer le tableau du fichier importé
+const color = require('chalk')
+let utulisateur = fs.readFileSync("users.json"); //importer le fichier "users.json"
 
 
 
+
+
+let  id, email, first, last, company1, created, country1, user;
+const tab = JSON.parse(utulisateur);  //recupérer le tableau du fichier importé
 
 
 //Parcourir le tableau en enregistrant les pays/sociétés dans une map tout en incrementant la valeurs pour les doublant.
@@ -33,8 +38,6 @@ function Liste_Pays_Utilisateurs()
 
 
 
-
-
 function Liste_Société_Utilisateurs()
 
 {
@@ -58,36 +61,83 @@ function Liste_Société_Utilisateurs()
     console.log(Mapp);
 }
 
+function GetFromUser(){
 
-//Pour afficher il suffit d'appler l'une des deux fonctions
+    console.log(color.green("Quel est l`id ? \n"));
+    id = prompt(" ");
+
+    console.log(color.green("Quel est le prenom ? \n"));
+    email = prompt(" ");
+
+    console.log(color.green("Quel est le prenom ? \n"));
+    first = prompt(" ");
+
+    console.log(color.green("Quel est le nom? \n"));
+    last = prompt(" ");
+
+    console.log(color.green("Quel est le nom de la société ? \n"));
+    company1 = prompt(" ");
+
+    console.log(color.green("Quand a elle été créee ? \n"));
+    created = prompt(" ");
+    
+    console.log(color.green("Quel est en est le pays ? \n"));
+    country1 = prompt(" ");
+    
+}
+
+function AddData(){
+    user = {
+        id: id,
+        email: email,
+        first: first,
+        last: last,
+        company: company1,
+        created_at: created,
+        country: country1
+    };
+
+    tab.push(user);
+
+    var newdata = JSON.stringify(tab);
+    fs.writeFile('users.json', newdata, err => {
+        // error checking
+        if(err) throw err;
+        
+        console.log("Utilisateur ajouté");
+    });
+}
+
 //Pour afficher il suffit d'appler l'une des deux fonctions (console)
 
-const prompt = require('prompt-sync')();    //inclusion  de prompt
+function Afficher(){
 
+    //on a utiliser le console.log puisque le \n ne marche pas avec le prompt
+    console.log(color.red("   C'est quoi votre choix ? \n\
+    1: Société   \n\
+    2: Pays       \n\
+    3: Ajouter un utulisateur   \n\
+    4: Quitter :\n "));
 
-//on a utiliser le console.log puisque le \n ne marche pas avec le prompt
-console.log("   C'est quoi votre choix ? \n\
-1: Société   \n\
-2: Pays       \n\
-3: Quitter :\n ");
+    const choix = prompt(" ");  //récupérer la valeur taper par l'utilisateur
 
+    console.log(`votre choix est :  ${choix}`);
 
-const c = prompt(" ");  //récupérer la valeur taper par l'utilisateur
-
-console.log(`votre choix est :  ${c}`);
-
-
-if(c==1){
-    console.log((Liste_Société_Utilisateurs())); //les societes
+    if(choix==1){
+        Liste_Société_Utilisateurs(); //les societes
+    }
+    if(choix==2){
+        Liste_Pays_Utilisateurs();  //les pays
+    }
+    if(choix==3){
+        GetFromUser();
+        AddData();
+    }
+    if(choix==4){
+        console.log(color.blue("Good bye"));   //exit 
+    }
 }
-if(c==2){
-    console.log((Liste_Pays_Utilisateurs()));  //les pays
-}
-if(c==3){
-    console.log("Good bye");   //exit 
-}
-
-
+Afficher();
 
 
 
